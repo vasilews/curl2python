@@ -364,6 +364,30 @@ footer a:hover {
 
 /* Placeholder for empty output */
 .code-container code:empty::before {
-  content: "# Python код появится здесь...";
+  content: attr(data-placeholder);
   color: var(--text-muted);
+}
+
+/* Language toggle */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-lang {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.btn-lang:hover {
+  background: var(--bg-tertiary);
+  color: var(--text);
 }

@@ -3,6 +3,111 @@
  * Supports: requests, httpx (sync/async), aiohttp
  */
 
+// ==================== I18N ====================
+const translations = {
+  ru: {
+    inputPlaceholder: "Вставьте cURL команду...",
+    outputPlaceholder: "# Python код появится здесь...",
+    imports: "Импорты",
+    session: "Session",
+    hint: "Ctrl+V для вставки",
+    example: "Пример",
+    paste: "Вставить",
+    clear: "Очистить",
+    copy: "Копировать",
+    download: "Скачать",
+    copied: "Скопировано!",
+    saved: "Файл сохранён",
+    noAccess: "Нет доступа к буферу",
+    nothingToCopy: "Нечего копировать",
+    nothingToDownload: "Нечего скачивать",
+    errorPrefix: 'Команда должна начинаться с "curl"',
+    errorNoUrl: "URL не найден",
+  },
+  en: {
+    inputPlaceholder: "Paste cURL command...",
+    outputPlaceholder: "# Python code will appear here...",
+    imports: "Imports",
+    session: "Session",
+    hint: "Ctrl+V to paste",
+    example: "Example",
+    paste: "Paste",
+    clear: "Clear",
+    copy: "Copy",
+    download: "Download",
+    copied: "Copied!",
+    saved: "File saved",
+    noAccess: "No clipboard access",
+    nothingToCopy: "Nothing to copy",
+    nothingToDownload: "Nothing to download",
+    errorPrefix: 'Command must start with "curl"',
+    errorNoUrl: "URL not found",
+  },
+};
+
+class I18n {
+  constructor() {
+    this.lang = this.detectLanguage();
+    this.applyTranslations();
+  }
+
+  detectLanguage() {
+    // Сначала проверяем сохранённый выбор
+    const saved = localStorage.getItem("lang");
+    if (saved && translations[saved]) {
+      return saved;
+    }
+
+    // Иначе определяем по браузеру
+    const browserLang = navigator.language.slice(0, 2).toLowerCase();
+    return translations[browserLang] ? browserLang : "en";
+  }
+
+  toggle() {
+    this.lang = this.lang === "ru" ? "en" : "ru";
+    localStorage.setItem("lang", this.lang);
+    this.applyTranslations();
+    return this.lang;
+  }
+
+  get(key) {
+    return translations[this.lang][key] || translations["en"][key] || key;
+  }
+
+  applyTranslations() {
+    // Элементы с data-i18n
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      el.textContent = this.get(key);
+    });
+
+    // Плейсхолдеры
+    document.querySelectorAll("[data-placeholder-key]").forEach((el) => {
+      const key = el.getAttribute("data-placeholder-key");
+      el.placeholder = this.get(key);
+    });
+
+    // Плейсхолдеры для data-placeholder (через атрибут)
+    document.querySelectorAll("code[data-placeholder-key]").forEach((el) => {
+      const key = el.getAttribute("data-placeholder-key");
+      el.setAttribute("data-placeholder", this.get(key));
+    });
+
+    // Тултипы
+    document.querySelectorAll("[data-tooltip-key]").forEach((el) => {
+      const key = el.getAttribute("data-tooltip-key");
+      el.title = this.get(key);
+    });
+
+    // Кнопка переключения
+    const btn = document.getElementById("lang-toggle");
+    if (btn) {
+      btn.textContent = this.lang === "ru" ? "EN" : "RU";
+    }
+  }
+}
+
+const i18n = new I18n();
 // ==================== CURL PARSER ====================
 class CurlParser {
   constructor(curlCommand) {
@@ -28,9 +133,8 @@ class CurlParser {
       .trim();
 
     if (!command.toLowerCase().startsWith("curl ")) {
-      throw new Error('Команда должна начинаться с "curl"');
+      throw new Error(i18n.get("errorPrefix"));
     }
-
     const tokens = this.tokenize(command);
     this.parseTokens(tokens);
   }
@@ -170,7 +274,7 @@ class CurlParser {
     }
 
     if (!this.url) {
-      throw new Error("URL не найден");
+      throw new Error(i18n.get("errorNoUrl"));
     }
   }
 
@@ -597,6 +701,10 @@ class UI {
         this.paste();
       }
     });
+
+    document.getElementById("lang-toggle").addEventListener("click", () => {
+      i18n.toggle();
+    });
   }
 
   debounceConvert() {
@@ -661,7 +769,7 @@ class UI {
       this.convert();
       this.els.input.focus();
     } catch {
-      this.toast("Нет доступа к буферу");
+      this.toast(i18n.get("noAccess"));
     }
   }
 
@@ -681,13 +789,13 @@ class UI {
   async copy() {
     const code = this.els.output.textContent;
     if (!code) {
-      this.toast("Нечего копировать");
+      this.toast(i18n.get("nothingToCopy"));
       return;
     }
 
     try {
       await navigator.clipboard.writeText(code);
-      this.toast("Скопировано!");
+      this.toast(i18n.get("copied"));
     } catch {
       // Fallback
       const ta = document.createElement("textarea");
@@ -696,17 +804,16 @@ class UI {
       ta.select();
       document.execCommand("copy");
       document.body.removeChild(ta);
-      this.toast("Скопировано!");
+      this.toast(i18n.get("copied"));
     }
   }
 
   download() {
     const code = this.els.output.textContent;
     if (!code) {
-      this.toast("Нечего скачивать");
+      this.toast(i18n.get("nothingToDownload"));
       return;
     }
-
     const lib = this.getLibrary().replace("_", "-");
     const blob = new Blob([code], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -715,7 +822,7 @@ class UI {
     a.download = `request-${lib}.py`;
     a.click();
     URL.revokeObjectURL(url);
-    this.toast("Файл сохранён");
+    this.toast(i18n.get("saved"));
   }
 
   showError(msg) {

@@ -14,23 +14,28 @@
     <div class="container">
       <header>
         <h1>cURL → Python</h1>
-        <div class="library-selector">
-          <label class="library-option">
-            <input type="radio" name="library" value="requests" />
-            <span>requests</span>
-          </label>
-          <label class="library-option">
-            <input type="radio" name="library" value="httpx_sync" />
-            <span>httpx</span>
-          </label>
-          <label class="library-option">
-            <input type="radio" name="library" value="httpx_async" checked />
-            <span>httpx async</span>
-          </label>
-          <label class="library-option">
-            <input type="radio" name="library" value="aiohttp" />
-            <span>aiohttp</span>
-          </label>
+        <div class="header-right">
+          <div class="library-selector">
+            <label class="library-option">
+              <input type="radio" name="library" value="requests" />
+              <span>requests</span>
+            </label>
+            <label class="library-option">
+              <input type="radio" name="library" value="httpx_sync" checked />
+              <span>httpx</span>
+            </label>
+            <label class="library-option">
+              <input type="radio" name="library" value="httpx_async" />
+              <span>httpx async</span>
+            </label>
+            <label class="library-option">
+              <input type="radio" name="library" value="aiohttp" />
+              <span>aiohttp</span>
+            </label>
+          </div>
+          <button id="lang-toggle" class="btn-lang" title="Switch language">
+            EN
+          </button>
         </div>
       </header>
 
@@ -41,7 +46,11 @@
             <div class="panel-header">
               <span class="panel-title">cURL</span>
               <div class="panel-actions">
-                <button id="example-btn" class="btn-icon" title="Пример">
+                <button
+                  id="example-btn"
+                  class="btn-icon"
+                  data-tooltip-key="example"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -58,7 +67,11 @@
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                   </svg>
                 </button>
-                <button id="paste-btn" class="btn-icon" title="Вставить">
+                <button
+                  id="paste-btn"
+                  class="btn-icon"
+                  data-tooltip-key="paste"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -73,7 +86,11 @@
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                   </svg>
                 </button>
-                <button id="clear-btn" class="btn-icon" title="Очистить">
+                <button
+                  id="clear-btn"
+                  class="btn-icon"
+                  data-tooltip-key="clear"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -90,7 +107,7 @@
             </div>
             <textarea
               id="curl-input"
-              placeholder="Вставьте cURL команду..."
+              data-placeholder-key="inputPlaceholder"
               spellcheck="false"
             ></textarea>
           </div>
@@ -100,7 +117,7 @@
             <div class="panel-header">
               <span class="panel-title">Python</span>
               <div class="panel-actions">
-                <button id="copy-btn" class="btn-icon" title="Копировать">
+                <button id="copy-btn" class="btn-icon" data-tooltip-key="copy">
                   <svg
                     width="16"
                     height="16"
@@ -122,7 +139,11 @@
                     ></path>
                   </svg>
                 </button>
-                <button id="download-btn" class="btn-icon" title="Скачать">
+                <button
+                  id="download-btn"
+                  class="btn-icon"
+                  data-tooltip-key="download"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -139,7 +160,7 @@
               </div>
             </div>
             <div class="code-container">
-              <pre><code id="python-output" class="language-python"></code></pre>
+              <pre><code id="python-output" class="language-python" data-placeholder-key="outputPlaceholder"></code></pre>
             </div>
           </div>
         </div>
@@ -148,7 +169,7 @@
         <div class="options-bar">
           <label class="option">
             <input type="checkbox" id="include-imports" checked />
-            <span>Импорты</span>
+            <span data-i18n="imports">Импорты</span>
           </label>
           <label class="option" id="wrap-async-option">
             <input type="checkbox" id="wrap-async" checked />
@@ -160,7 +181,7 @@
           </label>
           <label class="option">
             <input type="checkbox" id="use-session" />
-            <span>Session</span>
+            <span data-i18n="session">Session</span>
           </label>
         </div>
 
@@ -173,7 +194,7 @@
           >GitHub</a
         >
         <span class="separator">•</span>
-        <span class="hint">Ctrl+V для вставки</span>
+        <span class="hint" data-i18n="hint">Ctrl+V для вставки</span>
       </footer>
     </div>
 
