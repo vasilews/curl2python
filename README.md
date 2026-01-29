@@ -1,18 +1,18 @@
 # cURL → Python Converter
 
-Онлайн конвертер cURL команд в Python код.
+Online converter of cURL commands to Python code.
 
-🔗 **[Открыть](https://vasilews.github.io/curl2python/)**
+🔗 **[Open](https://vasilews.github.io/curl2python/)**
 
-## Возможности
+## Features
 
-- **requests** — классическая библиотека
-- **httpx** (sync/async) — современная альтернатива
-- **aiohttp** — асинхронный HTTP клиент
+- **requests** — classic library
+- **httpx** (sync/async) — modern alternative
+- **aiohttp** — asynchronous HTTP client
 
-### Опции
+### Options
 
-- Импорты
-- Обёртка в `async def main()`
-- Обработка ошибок `try/except`
-- Использование сессии
+- Imports
+- Wrap in `async def main()`
+- Error handling `try/except`
+- Use session
